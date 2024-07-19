@@ -67,7 +67,7 @@ def _warmup(glctx, device=None):
 
 class Pix2FacesRenderer:
     def __init__(self, device="cuda"):
-        self._glctx = dr.RasterizeGLContext(output_db=False, device=device)
+        self._glctx = dr.RasterizeCudaContext(device=device)
         self.device = device
         _warmup(self._glctx, device)
 
@@ -98,8 +98,8 @@ class Pix2FacesRenderer:
 pix2faces_renderer = Pix2FacesRenderer()
 
 def get_visible_faces(meshes: Meshes, cameras: CamerasBase, resolution=1024):
-    # pix_to_face = render_pix2faces_py3d(meshes, cameras, H=resolution, W=resolution)['pix_to_face']
-    pix_to_face = pix2faces_renderer.render_pix2faces_nvdiff(meshes, cameras, H=resolution, W=resolution)
+    pix_to_face = render_pix2faces_py3d(meshes, cameras, H=resolution, W=resolution)['pix_to_face']
+    # pix_to_face = pix2faces_renderer.render_pix2faces_nvdiff(meshes, cameras, H=resolution, W=resolution)
 
     unique_faces = torch.unique(pix_to_face.flatten())
     unique_faces = unique_faces[unique_faces != -1]
